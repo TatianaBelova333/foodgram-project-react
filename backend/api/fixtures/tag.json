@@ -1,0 +1,47 @@
+[
+    {
+      "model": "recipes.tag",
+      "pk": 1,
+      "fields": {
+        "name": "Завтрак",
+        "color": 3,
+        "slug": "breakfast"
+      }
+    },
+    {
+      "model": "recipes.tag",
+      "pk": 2,
+      "fields": {
+        "name": "Обед",
+        "color": 5,
+        "slug": "lunch"
+      }
+    },
+    {
+      "model": "recipes.tag",
+      "pk": 3,
+      "fields": {
+        "name": "Ужин",
+        "color": 9,
+        "slug": "dinner"
+      }
+    },
+    {
+      "model": "recipes.tag",
+      "pk": 4,
+      "fields": {
+        "name": "Десерт",
+        "color": 11,
+        "slug": "dessert"
+      }
+    },
+    {
+      "model": "recipes.tag",
+      "pk": 5,
+      "fields": {
+        "name": "Перекус",
+        "color": 8,
+        "slug": "snack"
+      }
+    }
+    ]

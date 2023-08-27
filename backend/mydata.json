@@ -1,0 +1,452 @@
+[
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 1,
+  "fields": {
+    "recipe": 1,
+    "ingredient_unit": 556,
+    "amount": 500
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 2,
+  "fields": {
+    "recipe": 1,
+    "ingredient_unit": 520,
+    "amount": 300
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 3,
+  "fields": {
+    "recipe": 2,
+    "ingredient_unit": 1714,
+    "amount": 400
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 4,
+  "fields": {
+    "recipe": 3,
+    "ingredient_unit": 117,
+    "amount": 400
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 5,
+  "fields": {
+    "recipe": 1,
+    "ingredient_unit": 1568,
+    "amount": 300
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 6,
+  "fields": {
+    "recipe": 1,
+    "ingredient_unit": 1053,
+    "amount": 100
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 7,
+  "fields": {
+    "recipe": 1,
+    "ingredient_unit": 878,
+    "amount": 100
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 8,
+  "fields": {
+    "recipe": 1,
+    "ingredient_unit": 816,
+    "amount": 10
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 9,
+  "fields": {
+    "recipe": 2,
+    "ingredient_unit": 2182,
+    "amount": 2
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 10,
+  "fields": {
+    "recipe": 2,
+    "ingredient_unit": 1635,
+    "amount": 200
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 11,
+  "fields": {
+    "recipe": 2,
+    "ingredient_unit": 1210,
+    "amount": 100
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 12,
+  "fields": {
+    "recipe": 2,
+    "ingredient_unit": 1162,
+    "amount": 50
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 13,
+  "fields": {
+    "recipe": 3,
+    "ingredient_unit": 655,
+    "amount": 200
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 14,
+  "fields": {
+    "recipe": 3,
+    "ingredient_unit": 1342,
+    "amount": 100
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 15,
+  "fields": {
+    "recipe": 3,
+    "ingredient_unit": 1751,
+    "amount": 100
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 16,
+  "fields": {
+    "recipe": 3,
+    "ingredient_unit": 899,
+    "amount": 50
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 17,
+  "fields": {
+    "recipe": 4,
+    "ingredient_unit": 2182,
+    "amount": 6
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 18,
+  "fields": {
+    "recipe": 4,
+    "ingredient_unit": 1547,
+    "amount": 150
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 19,
+  "fields": {
+    "recipe": 4,
+    "ingredient_unit": 495,
+    "amount": 50
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 20,
+  "fields": {
+    "recipe": 4,
+    "ingredient_unit": 1399,
+    "amount": 115
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 21,
+  "fields": {
+    "recipe": 4,
+    "ingredient_unit": 1647,
+    "amount": 40
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 22,
+  "fields": {
+    "recipe": 4,
+    "ingredient_unit": 2094,
+    "amount": 100
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 23,
+  "fields": {
+    "recipe": 4,
+    "ingredient_unit": 1637,
+    "amount": 100
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 24,
+  "fields": {
+    "recipe": 5,
+    "ingredient_unit": 1803,
+    "amount": 10
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 25,
+  "fields": {
+    "recipe": 5,
+    "ingredient_unit": 1790,
+    "amount": 200
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 26,
+  "fields": {
+    "recipe": 5,
+    "ingredient_unit": 1354,
+    "amount": 2
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 27,
+  "fields": {
+    "recipe": 5,
+    "ingredient_unit": 1354,
+    "amount": 10
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 28,
+  "fields": {
+    "recipe": 5,
+    "ingredient_unit": 435,
+    "amount": 30
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 29,
+  "fields": {
+    "recipe": 6,
+    "ingredient_unit": 403,
+    "amount": 11
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 30,
+  "fields": {
+    "recipe": 6,
+    "ingredient_unit": 1081,
+    "amount": 800
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 31,
+  "fields": {
+    "recipe": 6,
+    "ingredient_unit": 1547,
+    "amount": 120
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 32,
+  "fields": {
+    "recipe": 6,
+    "ingredient_unit": 1032,
+    "amount": 500
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 33,
+  "fields": {
+    "recipe": 6,
+    "ingredient_unit": 1647,
+    "amount": 200
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 34,
+  "fields": {
+    "recipe": 6,
+    "ingredient_unit": 685,
+    "amount": 20
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 35,
+  "fields": {
+    "recipe": 7,
+    "ingredient_unit": 1787,
+    "amount": 120
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 36,
+  "fields": {
+    "recipe": 7,
+    "ingredient_unit": 2079,
+    "amount": 300
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 37,
+  "fields": {
+    "recipe": 7,
+    "ingredient_unit": 1634,
+    "amount": 100
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 38,
+  "fields": {
+    "recipe": 7,
+    "ingredient_unit": 556,
+    "amount": 500
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 39,
+  "fields": {
+    "recipe": 7,
+    "ingredient_unit": 252,
+    "amount": 800
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 40,
+  "fields": {
+    "recipe": 8,
+    "ingredient_unit": 1032,
+    "amount": 500
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 41,
+  "fields": {
+    "recipe": 8,
+    "ingredient_unit": 2182,
+    "amount": 300
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 42,
+  "fields": {
+    "recipe": 8,
+    "ingredient_unit": 1081,
+    "amount": 250
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 43,
+  "fields": {
+    "recipe": 8,
+    "ingredient_unit": 1647,
+    "amount": 100
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 44,
+  "fields": {
+    "recipe": 9,
+    "ingredient_unit": 214,
+    "amount": 300
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 45,
+  "fields": {
+    "recipe": 9,
+    "ingredient_unit": 1806,
+    "amount": 500
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 46,
+  "fields": {
+    "recipe": 9,
+    "ingredient_unit": 1764,
+    "amount": 300
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 47,
+  "fields": {
+    "recipe": 9,
+    "ingredient_unit": 1954,
+    "amount": 100
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 48,
+  "fields": {
+    "recipe": 10,
+    "ingredient_unit": 811,
+    "amount": 300
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 49,
+  "fields": {
+    "recipe": 10,
+    "ingredient_unit": 654,
+    "amount": 200
+  }
+},
+{
+  "model": "recipes.recipeingredientamount",
+  "pk": 50,
+  "fields": {
+    "recipe": 10,
+    "ingredient_unit": 899,
+    "amount": 50
+  }
+}
+]

@@ -1,0 +1,138 @@
+[
+    {
+      "model": "users.user",
+      "pk": 1,
+      "fields": {
+        "last_login": "2023-08-24T15:35:50.562Z",
+        "is_active": true,
+        "date_joined": "2023-08-24T15:35:28.587Z",
+        "username": "admin",
+        "first_name": "admin",
+        "last_name": "admin",
+        "email": "Tanja5676@mail.ru",
+        "password": "pbkdf2_sha256$600000$7PnH1fdzambIOVlQZYIn0J$KucdtZbUF/ngit75bIKR8D++haBo0mB7AJ5hXxDm+jY=",
+        "role": "admin",
+        "groups": [],
+        "user_permissions": []
+      }
+    },
+    {
+      "model": "users.user",
+      "pk": 2,
+      "fields": {
+        "last_login": null,
+        "is_active": true,
+        "date_joined": "2023-08-25T11:45:57.544Z",
+        "username": "povar",
+        "first_name": "Николай",
+        "last_name": "Николаев",
+        "email": "nikolay@mail.ru",
+        "password": "pbkdf2_sha256$600000$zrK00A3LAi1bKNKFThXTTp$XHR5tDHZ5dE1j9tFOxmmBD131qbSnZKqIIWmDmIe3NM=",
+        "role": "user",
+        "groups": [],
+        "user_permissions": []
+      }
+    },
+    {
+      "model": "users.user",
+      "pk": 3,
+      "fields": {
+        "last_login": null,
+        "is_active": true,
+        "date_joined": "2023-08-25T11:48:12.061Z",
+        "username": "sergey",
+        "first_name": "Сергей",
+        "last_name": "Сергеев",
+        "email": "sergey@mail.ru",
+        "password": "pbkdf2_sha256$600000$meAJcfvCmUwGKf0BambPZ6$E9hbUtrNIPUyLsN1VIWwT0DNWOwXMqAe513wA6R9G5A=",
+        "role": "user",
+        "groups": [],
+        "user_permissions": []
+      }
+    },
+    {
+      "model": "users.user",
+      "pk": 4,
+      "fields": {
+        "last_login": null,
+        "is_active": true,
+        "date_joined": "2023-08-25T11:48:52.298Z",
+        "username": "olga",
+        "first_name": "Ольга",
+        "last_name": "Ильина",
+        "email": "olga@mail.ru",
+        "password": "pbkdf2_sha256$600000$O3pUhObyb4ekAEpuh7sMr6$bvURdfcJroiwbGTrRot9YfAam8TwLij/SqLc2VQrjJQ=",
+        "role": "user",
+        "groups": [],
+        "user_permissions": []
+      }
+    },
+    {
+      "model": "users.user",
+      "pk": 5,
+      "fields": {
+        "last_login": null,
+        "is_active": true,
+        "date_joined": "2023-08-25T11:49:56.024Z",
+        "username": "tanya",
+        "first_name": "Татьяна",
+        "last_name": "Белая",
+        "email": "tanya@mail.ru",
+        "password": "pbkdf2_sha256$600000$v8XMJ7PO3hUQnouDcpvBRH$vvgsSF27RgFHi7pKyev/W6h6RVAsVMSu2Jp7K+xh/G8=",
+        "role": "user",
+        "groups": [],
+        "user_permissions": []
+      }
+    },
+    {
+      "model": "users.user",
+      "pk": 6,
+      "fields": {
+        "last_login": null,
+        "is_active": true,
+        "date_joined": "2023-08-25T11:50:39.481Z",
+        "username": "elena",
+        "first_name": "Елена",
+        "last_name": "Ильичева",
+        "email": "elena@mail.ru",
+        "password": "pbkdf2_sha256$600000$aQ3OOVwH2uR4QUzRKWkJCr$FM1sw0xHbrvTsVjrnAE4z6GhqSwVd/jql1RlqQwbYAo=",
+        "role": "user",
+        "groups": [],
+        "user_permissions": []
+      }
+    },
+    {
+      "model": "users.user",
+      "pk": 7,
+      "fields": {
+        "last_login": null,
+        "is_active": true,
+        "date_joined": "2023-08-25T11:51:50.551Z",
+        "username": "misha",
+        "first_name": "Михаил",
+        "last_name": "Мишин",
+        "email": "misha@mail.ru",
+        "password": "pbkdf2_sha256$600000$FYxiwIBL9N1z4jYJxHrPLN$WkEc6tbZLpJ9ftPp7w5vKTtrxJTJPsp/DK40E7jADVw=",
+        "role": "user",
+        "groups": [],
+        "user_permissions": []
+      }
+    },
+    {
+      "model": "users.user",
+      "pk": 8,
+      "fields": {
+        "last_login": null,
+        "is_active": true,
+        "date_joined": "2023-08-25T11:53:07.101Z",
+        "username": "nastya",
+        "first_name": "Настя",
+        "last_name": "Чернова",
+        "email": "nastya@mail.ru",
+        "password": "pbkdf2_sha256$600000$WNiKraSd2HNMAjeb3sSTKd$CcVf+k/OWlh+PsX07rn5yuVHxWqrszHneiVn/cAaSjQ=",
+        "role": "user",
+        "groups": [],
+        "user_permissions": []
+      }
+    }
+    ]

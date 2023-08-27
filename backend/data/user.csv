@@ -1,0 +1,9 @@
+id,last_login,is_active,date_joined,username,first_name,last_name,email,password,role
+1,2023-08-24 15:35:50.562655,1,2023-08-24 15:35:28.587222,admin,admin,admin,Tanja5676@mail.ru,pbkdf2_sha256$600000$7PnH1fdzambIOVlQZYIn0J$KucdtZbUF/ngit75bIKR8D++haBo0mB7AJ5hXxDm+jY=,admin
+2,2023-08-25 11:45:57.544633,1,2023-08-25 11:45:57.544633,povar,Николай,Николаев,nikolay@mail.ru,pbkdf2_sha256$600000$zrK00A3LAi1bKNKFThXTTp$XHR5tDHZ5dE1j9tFOxmmBD131qbSnZKqIIWmDmIe3NM=,user
+3,2023-08-25 11:48:12.061235,1,2023-08-25 11:48:12.061235,sergey,Сергей,Сергеев,sergey@mail.ru,pbkdf2_sha256$600000$meAJcfvCmUwGKf0BambPZ6$E9hbUtrNIPUyLsN1VIWwT0DNWOwXMqAe513wA6R9G5A=,user
+4,2023-08-25 11:48:52.298246,1,2023-08-25 11:48:52.298246,olga,Ольга,Ильина,olga@mail.ru,pbkdf2_sha256$600000$O3pUhObyb4ekAEpuh7sMr6$bvURdfcJroiwbGTrRot9YfAam8TwLij/SqLc2VQrjJQ=,user
+5,2023-08-25 11:49:56.024207,1,2023-08-25 11:49:56.024207,tanya,Татьяна,Белая,tanya@mail.ru,pbkdf2_sha256$600000$v8XMJ7PO3hUQnouDcpvBRH$vvgsSF27RgFHi7pKyev/W6h6RVAsVMSu2Jp7K+xh/G8=,user
+6,2023-08-25 11:50:39.481572,1,2023-08-25 11:50:39.481572,elena,Елена,Ильичева,elena@mail.ru,pbkdf2_sha256$600000$aQ3OOVwH2uR4QUzRKWkJCr$FM1sw0xHbrvTsVjrnAE4z6GhqSwVd/jql1RlqQwbYAo=,user
+7,2023-08-25 11:51:50.55188,1,2023-08-25 11:51:50.551882,misha,Михаил,Мишин,misha@mail.ru,pbkdf2_sha256$600000$FYxiwIBL9N1z4jYJxHrPLN$WkEc6tbZLpJ9ftPp7w5vKTtrxJTJPsp/DK40E7jADVw=,user
+8,2023-08-25 11:53:07.101110,1,2023-08-25 11:53:07.101110,nastya,Настя,Чернова,nastya@mail.ru,pbkdf2_sha256$600000$WNiKraSd2HNMAjeb3sSTKd$CcVf+k/OWlh+PsX07rn5yuVHxWqrszHneiVn/cAaSjQ=,user

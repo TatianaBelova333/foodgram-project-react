@@ -1,17 +1,26 @@
 import csv
 import os
+from io import StringIO
 
+from django.core.management import call_command
+from django.db import connection
 from django.core.management.base import BaseCommand
+from django.apps import apps
 from django.conf import settings
 
-from recipes.models import Color, Ingredient, MeasurementUnit, Tag
-
 MODEL_FILE = {
-    'reviews': {
-        MeasurementUnit: 'measurement_units.csv',
-        Ingredient: 'ingredients.csv',
-        Color: 'colors.csv',
-        Tag: 'tags.csv',
+    'apps': {
+        'users': {'User': 'user.csv'},
+        'recipes': {
+            'MeasurementUnit': 'measurement_units.csv',
+            'Ingredient': 'ingredients.csv',
+            'TagColor': 'colors.csv',
+            'Tag': 'tags.csv',
+            'IngredientUnit': 'ingredient_unit.csv',
+            'Recipe': 'recipe.csv',
+            'RecipeIngredientAmount': 'recipeingredientamount.csv',
+            'Recipe_tags': 'recipe_tags.csv',
+        }
     }
 }
 
@@ -35,7 +44,17 @@ class Command(BaseCommand):
             self.stdout.write(f'{model} loading  is complete', ending='\n\n')
 
     def handle(self, *args, **options):
-        for model, csv_file in MODEL_FILE['reviews'].items():
-            file_path = os.path.join(CSV_DATA_PATH, csv_file)
-            self._load_csv(file_path, model)
-        self.stdout.write('The db prepopulation is complete.')
+        for app_name, data in MODEL_FILE['apps'].items():
+            for model_name, csv_file in data.items():
+                model = apps.get_model(app_name, model_name)
+                file_path = os.path.join(CSV_DATA_PATH, csv_file)
+                self._load_csv(file_path, model)
+            self.stdout.write('The db prepopulation is complete.')
+
+        commands = StringIO()
+        for app in apps.get_app_configs():
+            call_command(
+                'sqlsequencereset', app.label, stdout=commands, no_color=True
+            )
+        with connection.cursor() as cursor:
+            cursor.execute(commands.getvalue())
