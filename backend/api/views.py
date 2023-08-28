@@ -101,7 +101,6 @@ class CustomUserViewSet(DjoserUserViewSet):
 class IngredientReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
     queryset = IngredientUnit.objects.all()
     serializer_class = IngredientUnitSerializer
-    # filter_backends = (IngredientSearchFilter,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IngredientFilter
     pagination_class = None
@@ -195,7 +194,8 @@ class RecipeViewset(viewsets.ModelViewSet):
             readable_data,
             headers={
                 "Content-Type": "text/plain",
-                "Content-Disposition": 'attachment; filename="shopping_list.txt"',
+                "Content-Disposition": ('attachment; '
+                                        'filename="ingredients.txt"'),
             },
         )
         return response
