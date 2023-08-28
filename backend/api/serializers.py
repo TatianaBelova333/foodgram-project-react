@@ -31,6 +31,10 @@ class CustomSetPasswordSerializer(SetPasswordSerializer):
 
 
 class UserRegistrationSerializer(UserCreateSerializer):
+    """
+    Serializer for registering new users.
+
+    """
 
     class Meta:
         model = User
@@ -58,6 +62,10 @@ class UserRegistrationSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
+    """
+    Serialiser for registered users' profiles.
+
+    """
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
@@ -85,6 +93,10 @@ class CustomUserSerializer(UserSerializer):
 
 
 class CurrentUserSerializer(CustomUserSerializer):
+    """
+    Serializer for the current request user profile.
+
+    """
 
     def get_is_subscribed(self, obj):
         """
@@ -106,6 +118,7 @@ class IngredientUnitSerializer(serializers.ModelSerializer):
 
 
 class Name2HexColor(serializers.Field):
+    """Serializer for converting color names into valid hex-codes."""
 
     def to_representation(self, value):
         try:
@@ -116,6 +129,7 @@ class Name2HexColor(serializers.Field):
 
 
 class TagSerializer(serializers.ModelSerializer):
+    """Serializer for recipe tags."""
     color = Name2HexColor()
 
     class Meta:

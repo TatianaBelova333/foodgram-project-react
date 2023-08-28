@@ -41,7 +41,7 @@ cd infra
 docker compose up
 docker compose exec backend python manage.py migrate
 docker compose exec backend python manage.py collectstatic
-docker compose exec backend cp -r /app/collected_static/. /backend_static/static/
+docker compose exec backend cp -r /app/collected_static/. /backend_static/
 ```
 - To prepopulate database with initial data for testing, run the following command:
   ```

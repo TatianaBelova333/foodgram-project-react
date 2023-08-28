@@ -2,6 +2,12 @@ from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
 class IsObjOwnerOrAdminOrReadOnly(BasePermission):
+    """
+    Give read-only access permission to unauthorised users.
+    Authorised users with User role may edit and delete their own recipes.
+    Authorised admins may edit and delete other users' recipes.
+
+    """
 
     message = ("Editing or deleting other users'"
                "recipes is not allowed")

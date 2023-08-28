@@ -3,6 +3,7 @@ version: '3.3'
 volumes:
   pg_data:
   static:
+  backend_static:
   media:
 
 services:
@@ -18,7 +19,7 @@ services:
     depends_on:
       - db
     volumes:
-      - static:/backend_static
+      - backend_static:/backend_static
       - media:/app/media/recipes/images
     
   frontend:
@@ -40,4 +41,5 @@ services:
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
       - static:/static
+      - backend_static:/backend_static
       - media:/media/recipes/images

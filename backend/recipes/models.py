@@ -49,7 +49,7 @@ class NameBaseModel(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Convert the case of a name to the default letter case
+        Convert the case of the name value to the default letter case
         before saving in db for consistency.
 
         """
@@ -60,6 +60,7 @@ class NameBaseModel(models.Model):
 
 
 class MeasurementUnit(NameBaseModel):
+    """Model for units of measurement for ingredients."""
     default_lettercase = 'lowercase'
 
     class Meta(NameBaseModel.Meta):
@@ -68,6 +69,7 @@ class MeasurementUnit(NameBaseModel):
 
 
 class Ingredient(NameBaseModel):
+    """Model for recipe ingredeints."""
 
     measurement_units = models.ManyToManyField(
         MeasurementUnit,
@@ -82,6 +84,11 @@ class Ingredient(NameBaseModel):
 
 
 class IngredientUnit(models.Model):
+    """
+    Model for many-to-many relationship between
+    Ingredient and MeausurementUnit models.
+
+    """
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
@@ -103,6 +110,7 @@ class IngredientUnit(models.Model):
 
 
 class TagColor(NameBaseModel):
+    """Model for recipe tag colors."""
     default_lettercase = 'lowercase'
 
     class Meta(NameBaseModel.Meta):
@@ -124,6 +132,7 @@ class TagColor(NameBaseModel):
 
 
 class Tag(NameBaseModel):
+    """Model for recipes tags."""
     color = models.OneToOneField(
         TagColor,
         on_delete=models.PROTECT,
@@ -155,6 +164,7 @@ class Tag(NameBaseModel):
 
 
 class Recipe(models.Model):
+    """Model for food recipes."""
     name = models.CharField(
         'Название',
         max_length=200,
@@ -240,6 +250,11 @@ class Recipe(models.Model):
 
 
 class RecipeIngredientAmount(models.Model):
+    """
+    Model for many-to-many relationship between
+    Recipe and IngredientUnit models.
+
+    """
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,

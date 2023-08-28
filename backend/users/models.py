@@ -84,6 +84,7 @@ class User(AbstractUser):
 
 
 class Subscription(models.Model):
+    """Model for user subscriptions."""
     is_cleaned = False
 
     user = models.ForeignKey(

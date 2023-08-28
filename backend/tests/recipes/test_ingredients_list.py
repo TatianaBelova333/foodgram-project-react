@@ -3,7 +3,8 @@ from http import HTTPStatus
 from rest_framework.test import APIClient, APITestCase
 
 from recipes.models import IngredientUnit
-from tests.factories import IngredientUnitFactory, UserFactory
+from tests.factories import (IngredientUnitFactory, UserFactory,
+                             IngredientFactory)
 from api.serializers import IngredientUnitSerializer
 
 INGREDIENTS_LIST_URL = '/api/ingredients/'
@@ -68,4 +69,24 @@ class IngredientsListTestCase(APITestCase):
         )
 
     def test_ingredients_filter_by_name_case_insensitive(self):
-        pass
+        ingredient_for_search = IngredientFactory(name='капуста')
+        IngredientUnitFactory(
+            ingredient=ingredient_for_search,
+        )
+        params = [
+            {'name': 'Кап'},
+            {'name': 'пус'},
+        ]
+        for data in params:
+            with self.subTest(data=data):
+                response = self.authorised_user.get(__class__.url, data=data)
+                searched_ingredient = IngredientUnit.objects.filter(
+                    ingredient__name__icontains=data['name'],
+                )
+                expected_result = IngredientUnitSerializer(
+                    searched_ingredient, many=True,
+                ).data
+                self.assertEqual(
+                    response.status_code, HTTPStatus.OK
+                )
+                self.assertEqual(response.data, expected_result)
