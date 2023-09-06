@@ -133,3 +133,5 @@ dmypy.json
 
 *.bak
 .DS_Store
+
+nginx1.conf.bak

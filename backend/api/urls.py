@@ -2,10 +2,12 @@ from django.contrib.auth import get_user_model
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from api.views import (CustomUserViewSet,
-                       IngredientReadOnlyViewset,
-                       TagReadOnlyViewset,
-                       RecipeViewset)
+from api.views import (
+    CustomUserViewSet,
+    IngredientReadOnlyViewset,
+    RecipeViewset,
+    TagReadOnlyViewset,
+)
 
 app_name = 'api'
 User = get_user_model()

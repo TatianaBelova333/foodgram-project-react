@@ -1,5 +1,7 @@
 # Foodgram Recipe Website
-Available at https://foodgram-belova.ddns.net/recipes. \
+Available at https://foodgram-belova.ddns.net. \
+
+Admin panel at https://foodgram-belova.ddns.net/admin/ \
 Для ревью (superuser):
 * email: Tanja5676@mail.ru
 * password: 1111
@@ -42,9 +44,9 @@ cd infra
 
 - Build and run your app with docker compose from the project directory
 ```
-docker compose up --build
-docker compose exec backend python manage.py migrate
-docker compose exec backend cp -r /app/collected_static/. /backend_static/
+  docker compose up --build
+  docker compose exec backend python manage.py migrate
+  docker compose exec backend cp -r /app/collected_static/. /backend_static/
 ```
 - To prepopulate database with initial data for testing, run the following command:
   ```
@@ -56,6 +58,10 @@ docker compose exec backend cp -r /app/collected_static/. /backend_static/
   ```
 
 - To see the API documentation, go to http://localhost/api/docs/ .
+- To run tests, run the following command:
+```
+  docker compose exec backend pytest
+```
 
 # Authors
 [Tatiana Belova](https://github.com/TatianaBelova333)

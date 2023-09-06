@@ -1,13 +1,15 @@
+import base64
 from collections import Counter
 from typing import OrderedDict
-import base64
 
+from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.db import DatabaseError, transaction
-from django.contrib.auth import get_user_model
-from djoser.serializers import (SetPasswordSerializer,
-                                UserCreateSerializer,
-                                UserSerializer)
+from djoser.serializers import (
+    SetPasswordSerializer,
+    UserCreateSerializer,
+    UserSerializer,
+)
 from rest_framework import serializers
 
 from recipes.models import IngredientUnit, Recipe, RecipeIngredientAmount, Tag
