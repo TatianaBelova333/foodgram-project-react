@@ -2,11 +2,10 @@ import csv
 import os
 from io import StringIO
 
-from django.core.management import call_command
-from django.db import connection
-from django.core.management.base import BaseCommand
 from django.apps import apps
 from django.conf import settings
+from django.core.management import BaseCommand, call_command
+from django.db import connection
 
 MODEL_FILE = {
     'apps': {
@@ -14,7 +13,6 @@ MODEL_FILE = {
         'recipes': {
             'MeasurementUnit': 'measurement_units.csv',
             'Ingredient': 'ingredients.csv',
-            'TagColor': 'colors.csv',
             'Tag': 'tags.csv',
             'IngredientUnit': 'ingredient_unit.csv',
             'Recipe': 'recipe.csv',

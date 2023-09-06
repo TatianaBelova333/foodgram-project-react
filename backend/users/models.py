@@ -1,9 +1,9 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
-from django.core.exceptions import ValidationError
 
-from users.managers import UserRoles, UserManager
+from users.managers import UserManager, UserRoles
 
 
 class User(AbstractUser):
@@ -51,12 +51,15 @@ class User(AbstractUser):
     def is_user(self):
         return self.role == UserRoles.USER
 
+    #  по ТЗ у пользователя только две роли, а если убрать это property,
+    #  то админ не может зайти в админку, или я не знаю,
+    # как сделать по-другому...
     @property
-    def is_superuser(self):
+    def is_staff(self):
         return self.is_admin
 
     @property
-    def is_staff(self):
+    def is_superuser(self):
         return self.is_admin
 
     def has_perm(self, perm, obj=None):
@@ -105,7 +108,7 @@ class Subscription(models.Model):
         verbose_name_plural = 'Подписки'
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'author'],
+                fields=('user', 'author'),
                 name='user_author'
             )
         ]

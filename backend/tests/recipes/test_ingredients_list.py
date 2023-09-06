@@ -24,7 +24,7 @@ class IngredientsListTestCase(APITestCase):
         self.unauthorised_user = APIClient()
 
         self.authorised_user = APIClient()
-        self.authorised_user.force_login(IngredientsListTestCase.user)
+        self.authorised_user.force_authenticate(IngredientsListTestCase.user)
 
     def test_ingredients_list_unauthorised_correct(self):
         response = self.unauthorised_user.get(__class__.url)

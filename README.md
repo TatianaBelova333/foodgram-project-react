@@ -1,4 +1,8 @@
 # Foodgram Recipe Website
+Available at https://foodgram-belova.ddns.net/recipes. \
+Для ревью (superuser):
+* email: Tanja5676@mail.ru
+* password: 1111
 
 ### Description
 Website for posting and viewing recipes.
@@ -38,19 +42,20 @@ cd infra
 
 - Build and run your app with docker compose from the project directory
 ```
-docker compose up
+docker compose up --build
 docker compose exec backend python manage.py migrate
-docker compose exec backend python manage.py collectstatic
 docker compose exec backend cp -r /app/collected_static/. /backend_static/
 ```
 - To prepopulate database with initial data for testing, run the following command:
   ```
-  docker compose exec backend python3 manage.py loaddata user ingredient measurementunit ingredientunit tagcolor tag recipe recipeingredientamount
+  docker compose exec backend python3 manage.py loaddata user ingredient measurementunit ingredientunit tag recipe recipeingredientamount
   ```
 - Alternatively, you can run this command (to prepopulate db with initial data for testing):
   ```
   docker compose exec backend python3 manage.py loadcsvdata
   ```
+
+- To see the API documentation, go to http://localhost/api/docs/ .
 
 # Authors
 [Tatiana Belova](https://github.com/TatianaBelova333)

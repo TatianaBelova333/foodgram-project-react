@@ -1,32 +1,12 @@
 import factory
 from django.contrib.auth import get_user_model
 
-from recipes.models import (Tag, TagColor, IngredientUnit,
+from recipes.models import (Tag, IngredientUnit,
                             Ingredient, MeasurementUnit,
                             Recipe, RecipeIngredientAmount)
 from users.models import Subscription
 
 User = get_user_model()
-
-
-class TagColorFactory(factory.django.DjangoModelFactory):
-
-    class Meta:
-        model = TagColor
-
-    name = factory.Iterator([
-        'lightblue',
-        'brown',
-        'maroon',
-        'aliceblue',
-        'aquamarine',
-        'blueviolet',
-        'chocolate',
-        'orange',
-        'white',
-        'black',
-        'lightpink',
-    ])
 
 
 class TagFactory(factory.django.DjangoModelFactory):
@@ -35,7 +15,17 @@ class TagFactory(factory.django.DjangoModelFactory):
         model = Tag
 
     name = factory.Sequence(lambda n: f'breakfast{n}')
-    color = factory.SubFactory(TagColorFactory)
+    color = factory.Iterator([
+        '#A4FF26',
+        '#48FF9D',
+        '#63F2FF',
+        '#FF1BEB',
+        '#EFFFCC',
+        '#C5C7FF',
+        '#EEB5FF',
+        '#FF6385',
+        '#EBC8FF',
+    ])
     slug = factory.Sequence(lambda n: f'breakfast{n}')
 
 

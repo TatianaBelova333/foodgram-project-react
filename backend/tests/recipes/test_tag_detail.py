@@ -4,7 +4,7 @@ from http import HTTPStatus
 from rest_framework.test import APIClient, APITestCase
 from recipes.models import Tag
 
-from tests.factories import TagFactory, UserFactory, TagColorFactory
+from tests.factories import TagFactory, UserFactory
 from api.serializers import TagSerializer
 
 
@@ -20,7 +20,7 @@ class TagDetailTestCase(APITestCase):
         self.unauthorised_user = APIClient()
 
         self.authorised_user = APIClient()
-        self.authorised_user.force_login(TagDetailTestCase.user)
+        self.authorised_user.force_authenticate(TagDetailTestCase.user)
 
     def test_tag_detail_unauthorised_correct(self):
         url = TagDetailTestCase.url
@@ -78,9 +78,8 @@ class TagDetailTestCase(APITestCase):
 
     def test_tag_detail_patch(self):
         url = TagDetailTestCase.url
-        tag_color = TagColorFactory()
         data = {
-            'color': tag_color.pk,
+            'color': 'FF5733',
             'slug': 'brunch',
             'name': 'brunch'
         }

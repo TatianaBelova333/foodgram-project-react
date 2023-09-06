@@ -235,15 +235,6 @@
     },
     {
       "model": "recipes.recipeingredientamount",
-      "pk": 27,
-      "fields": {
-        "recipe": 5,
-        "ingredient_unit": 1354,
-        "amount": 10
-      }
-    },
-    {
-      "model": "recipes.recipeingredientamount",
       "pk": 28,
       "fields": {
         "recipe": 5,

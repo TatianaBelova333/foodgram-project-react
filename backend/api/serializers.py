@@ -1,16 +1,17 @@
+from collections import Counter
+from typing import OrderedDict
 import base64
 
-from django.contrib.auth import get_user_model
-from rest_framework import serializers
-from djoser.serializers import (UserCreateSerializer, UserSerializer,
-                                SetPasswordSerializer)
 from django.core.files.base import ContentFile
+from django.db import DatabaseError, transaction
+from django.contrib.auth import get_user_model
+from djoser.serializers import (SetPasswordSerializer,
+                                UserCreateSerializer,
+                                UserSerializer)
+from rest_framework import serializers
 
-import webcolors
-
-from recipes.models import IngredientUnit, Tag, Recipe, RecipeIngredientAmount
+from recipes.models import IngredientUnit, Recipe, RecipeIngredientAmount, Tag
 from users.models import Subscription
-
 
 User = get_user_model()
 
@@ -117,20 +118,8 @@ class IngredientUnitSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'measurement_unit')
 
 
-class Name2HexColor(serializers.Field):
-    """Serializer for converting color names into valid hex-codes."""
-
-    def to_representation(self, value):
-        try:
-            data = webcolors.name_to_hex(value.name)
-        except ValueError:
-            raise serializers.ValidationError('Для этого цвета нет HEX-кода')
-        return data
-
-
 class TagSerializer(serializers.ModelSerializer):
     """Serializer for recipe tags."""
-    color = Name2HexColor()
 
     class Meta:
         model = Tag
@@ -149,24 +138,27 @@ class Base64ImageField(serializers.ImageField):
 
 class IngredientUnitAmountSerializer(serializers.ModelSerializer):
     """Ingredient model serializer."""
-    id = serializers.IntegerField(source='ingredient_unit.pk')
-    name = serializers.CharField(source='ingredient_unit.ingredient.name')
+    id = serializers.IntegerField(source='ingredient_unit.id')
+    name = serializers.CharField(
+        source='ingredient_unit.ingredient.name',
+        read_only=True,
+    )
     measurement_unit = serializers.CharField(
-        source='ingredient_unit.measurement_unit.name'
+        source='ingredient_unit.measurement_unit.name',
+        read_only=True,
     )
 
     class Meta:
         model = RecipeIngredientAmount
         fields = ('id', 'name', 'measurement_unit', 'amount')
 
-
-class IngredientUnitAmountCreateSerializer(serializers.ModelSerializer):
-    """Ingredient model serializer."""
-    id = serializers.IntegerField(source='ingredient_unit.pk')
-
-    class Meta:
-        model = RecipeIngredientAmount
-        fields = ('id', 'amount')
+    def validate_amount(self, value):
+        if value < 1 or value > 2000:
+            raise serializers.ValidationError(
+                'Количество должно быть не менее 1 '
+                'и не более 2000 единиц.'
+            )
+        return value
 
 
 class RecipeListDetailSerializer(serializers.ModelSerializer):
@@ -202,7 +194,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault(),
         read_only=True,
     )
-    ingredients = IngredientUnitAmountCreateSerializer(
+    ingredients = IngredientUnitAmountSerializer(
         many=True,
         source='recipeingredientamount_set',
     )
@@ -220,80 +212,74 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
             'image',
             'author',
         ]
-        read_only_fields = ('id', )
+        read_only_fields = ('id',)
 
-    def validate(self, data):
-        ingredients = data.pop('recipeingredientamount_set', None)
-        if ingredients is not None:
-            for ingredient in ingredients:
-                ingredient_unit_pk = ingredient['ingredient_unit'].get('pk')
-                ingredient_amount = ingredient.get('amount')
-                if ingredient_unit_pk and ingredient_amount:
-                    if not IngredientUnit.objects.filter(
-                        pk=ingredient_unit_pk
-                    ).exists():
-                        raise serializers.ValidationError(
-                            {
-                                'ingredients': (f'The ingredient_unit with pk'
-                                                f'{ingredient_unit_pk} '
-                                                f'does not exist!')
-                            }
-                        )
-                else:
-                    raise serializers.ValidationError(
-                        {
-                            'ingredients': ('id or/and amount values '
-                                            'are missing')
-                        }
-                    )
-            data['ingredients'] = ingredients
-        return data
+    # кажется, для тегов не нужна валидация - дубликатов не будет,
+    # так как здесь set,
+    # а отсутствие tags в initial data проверяется где-то выше
+    # и не доходит до метода validate_tags
+    def validate_ingredients(self, ingredients):
+        if len(ingredients) == 0:
+            raise serializers.ValidationError(
+                'Необходимо добавить хотя бы один ингредиент.'
+            )
+        ingr_count = Counter(
+            ingr['ingredient_unit']['id'] for ingr in ingredients
+        )
+        ingr_duplicates_exist = ingr_count.total() != len(ingr_count)
+        if ingr_duplicates_exist:
+            raise serializers.ValidationError(
+                'Некоторые ингредиенты дублируются.'
+            )
+        return ingredients
 
-    def create(self, validated_data):
-        ingredients = validated_data.pop('ingredients')
-        tags = validated_data.pop('tags')
-
-        recipe = Recipe.objects.create(**validated_data)
-
-        for tag in tags:
-            recipe.tags.add(tag)
-
+    def __add_ingredients(
+            self,
+            recipe: Recipe,
+            ingredients: list[OrderedDict]
+    ) -> None:
         for ingredient in ingredients:
-            ingredient_unit_pk = ingredient['ingredient_unit']['pk']
-            ingredient_unit = IngredientUnit.objects.get(pk=ingredient_unit_pk)
+            ingr_unit_id = ingredient['ingredient_unit']['id']
+            ingr_unit = IngredientUnit.objects.get(
+                pk=ingr_unit_id,
+            )
             RecipeIngredientAmount.objects.create(
                 recipe=recipe,
                 amount=ingredient['amount'],
-                ingredient_unit=ingredient_unit,
+                ingredient_unit=ingr_unit,
             )
-        recipe.save()
+
+    def create(self, validated_data):
+        ingredients = validated_data.pop('recipeingredientamount_set')
+        tags = validated_data.pop('tags')
+        try:
+            with transaction.atomic():
+                recipe = Recipe.objects.create(**validated_data)
+                self.__add_ingredients(recipe, ingredients)
+                recipe.tags.add(*tags)
+                recipe.save()
+        except DatabaseError:
+            raise serializers.ValidationError('Не удалось создать рецепт.')
+
         return recipe
 
-    def update(self, instance, validated_data):
-        tags = validated_data.pop('tags', None)
-        ingredients = validated_data.pop('ingredients', None)
+    def update(self, recipe, validated_data):
+        tags = validated_data.pop('tags')
+        ingredients = validated_data.pop('recipeingredientamount_set')
+        try:
+            with transaction.atomic():
+                recipe.tags.clear()
+                recipe.tags.add(*tags)
 
-        if tags is not None:
-            instance.tags.clear()
-            for tag in tags:
-                instance.tags.add(tag)
+                recipe.ingredients.clear()
+                self.__add_ingredients(recipe, ingredients)
+                recipe.save()
+        except DatabaseError:
+            raise serializers.ValidationError(
+                f'Не удалось отредактировать рецепт - {recipe.name}.'
+            )
 
-        if ingredients is not None:
-            instance.ingredients.clear()
-            for ingredient in ingredients:
-                ingredient_unit_pk = ingredient['ingredient_unit']['pk']
-                ingredient_unit = IngredientUnit.objects.get(
-                    pk=ingredient_unit_pk
-                )
-                RecipeIngredientAmount.objects.create(
-                    recipe=instance,
-                    amount=ingredient['amount'],
-                    ingredient_unit=ingredient_unit,
-                )
-
-        instance.save()
-
-        return super().update(instance, validated_data)
+        return super().update(recipe, validated_data)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -305,6 +291,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class RecipeBriefInfoSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Recipe
         fields = [
@@ -316,6 +303,7 @@ class RecipeBriefInfoSerializer(serializers.ModelSerializer):
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
+    """Serializer for users' subcriptions."""
     id = serializers.IntegerField(source='author.pk')
     username = serializers.CharField(source='author.username')
     first_name = serializers.CharField(source='author.first_name')

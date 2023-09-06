@@ -1,7 +1,9 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import (BasePermission,
+                                        IsAuthenticatedOrReadOnly,
+                                        SAFE_METHODS)
 
 
-class IsObjOwnerOrAdminOrReadOnly(BasePermission):
+class IsObjOwnerOrAdminOrReadOnly(IsAuthenticatedOrReadOnly):
     """
     Give read-only access permission to unauthorised users.
     Authorised users with User role may edit and delete their own recipes.
@@ -11,12 +13,6 @@ class IsObjOwnerOrAdminOrReadOnly(BasePermission):
 
     message = ("Editing or deleting other users'"
                "recipes is not allowed")
-
-    def has_permission(self, request, view):
-        return (
-            request.method in SAFE_METHODS
-            or request.user.is_authenticated
-        )
 
     def has_object_permission(self, request, view, obj):
         return (

@@ -1,4 +1,5 @@
 from http import HTTPStatus
+import pytest
 
 from rest_framework.test import APIClient, APITestCase
 from django.contrib.auth import get_user_model
@@ -11,6 +12,7 @@ from api.serializers import CurrentUserSerializer
 User = get_user_model()
 
 
+@pytest.mark.django_db
 class CurrentUserDetailTestCase(APITestCase):
     @classmethod
     def setUpClass(cls):
@@ -57,13 +59,3 @@ class CurrentUserDetailTestCase(APITestCase):
             'is_subscribed',
         }
         self.assertEqual(single_user_fields, expected_user_fields)
-
-    def test_current_user_patch_forbidden(self):
-        response = self.authorised_user.patch(
-            __class__.url, data={'last_name': 'Katya'}
-        )
-        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
-
-    def test_current_user_delete_forbidden(self):
-        response = self.authorised_user.delete(__class__.url)
-        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)

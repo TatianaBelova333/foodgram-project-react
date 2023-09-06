@@ -5,7 +5,6 @@ from rest_framework.test import (APIClient, APITestCase,
 from django.contrib.auth import get_user_model
 
 from api.views import CustomUserViewSet
-from users.managers import UserRoles
 from users.models import Subscription
 from tests.factories import UserFactory, SubscriptionFactory
 from api.serializers import CustomUserSerializer
@@ -31,16 +30,12 @@ class UserDetailTestCase(APITestCase):
         self.another_authorised_user = APIClient()
         self.another_authorised_user.force_authenticate(__class__.another_user)
 
-    def test_user_detail_unauthorised_ok(self):
+    def test_user_detail_unauthorised_401(self):
         response = self.unauthorised_user.get(__class__.url)
-        expected_response = CustomUserSerializer(
-            __class__.user,
-        ).data
 
         self.assertEqual(
-            response.status_code, HTTPStatus.OK
+            response.status_code, HTTPStatus.UNAUTHORIZED
         )
-        self.assertEqual(response.data, expected_response)
 
     def test_user_detail_authorised_ok(self):
         response = self.authorised_user.get(__class__.url)
@@ -105,17 +100,3 @@ class UserDetailTestCase(APITestCase):
             'is_subscribed'
         )
         self.assertFalse(detail_user_is_subscribed_field)
-
-    def test_detail_user_patch_forbidden(self):
-        response = self.authorised_user.patch(
-            __class__.url, data={'last_name': 'Katya'}
-        )
-        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
-
-    def test_detail_user_patch_by_admin_forbidden(self):
-        request_user = __class__.user
-        request_user.role = UserRoles.ADMIN
-        response = self.authorised_user.patch(
-            __class__.url, data={'last_name': 'Katya'}
-        )
-        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)

@@ -1,6 +1,6 @@
-id,name,color_id,slug
-1,Завтрак,3,breakfast
-2,Обед,5,lunch
-3,Ужин,9,dinner
-4,Десерт,11,dessert
-5,Перекус,8,snack
+id,name,slug,color
+1,Завтрак,breakfast,#FF5C0F
+2,Обед,lunch,#3424FF
+3,Ужин,dinner,#6CF7FF
+4,Десерт,dessert,#E7FF0F
+5,Перекус,snack,#FF63E5

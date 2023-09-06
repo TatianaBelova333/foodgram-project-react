@@ -1,10 +1,9 @@
-from django.db import models
-from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
+from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
-
+from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from pytils.translit import slugify
-import webcolors
 
 User = get_user_model()
 
@@ -40,12 +39,17 @@ class NameBaseModel(models.Model):
 
         """
         self.is_cleaned = True
-        name = self.LETTER_CASES[self.default_lettercase](self.name)
+        self.name = self.LETTER_CASES[self.default_lettercase](self.name)
 
-        if self.__class__.objects.filter(
-            name=name,
-        ).exists():
-            raise ValidationError('Данное название уже существует.')
+        instance_exists = self.__class__.objects.filter(pk=self.pk).first()
+
+        if not instance_exists or instance_exists.name != self.name:
+            if self.__class__.objects.filter(
+                name=self.name,
+            ).exists():
+                raise ValidationError(
+                    {'name': 'Данное название уже сущуествует.'}
+                )
 
     def save(self, *args, **kwargs):
         """
@@ -55,7 +59,6 @@ class NameBaseModel(models.Model):
         """
         if not self.is_cleaned:
             self.full_clean()
-        self.name = self.LETTER_CASES[self.default_lettercase](self.name)
         super().save(*args, **kwargs)
 
 
@@ -69,7 +72,7 @@ class MeasurementUnit(NameBaseModel):
 
 
 class Ingredient(NameBaseModel):
-    """Model for recipe ingredeints."""
+    """Model for recipe ingredients."""
 
     measurement_units = models.ManyToManyField(
         MeasurementUnit,
@@ -104,40 +107,24 @@ class IngredientUnit(models.Model):
         verbose_name = 'Ингредиент с единицой измерения'
         verbose_name_plural = 'Ингредиенты с единицами измерения'
         ordering = ('ingredient', 'measurement_unit')
+        constraints = [
+            models.UniqueConstraint(
+                fields=('ingredient', 'measurement_unit'),
+                name='unique_ingredient_unit',
+            )
+        ]
 
     def __str__(self):
         return f'{self.ingredient}({self.measurement_unit})'
 
 
-class TagColor(NameBaseModel):
-    """Model for recipe tag colors."""
-    default_lettercase = 'lowercase'
-
-    class Meta(NameBaseModel.Meta):
-        verbose_name = 'Цвет тега'
-        verbose_name_plural = 'Цвета тегов'
-
-    def clean(self):
-        """
-        Raise ValidationError if the HEX-code for the color name
-        does not exist.
-
-        """
-        try:
-            webcolors.name_to_hex(self.name)
-        except ValueError:
-            raise ValidationError('HEX-код для данноге цвета не существует.')
-
-        super().clean()
-
-
 class Tag(NameBaseModel):
     """Model for recipes tags."""
-    color = models.OneToOneField(
-        TagColor,
-        on_delete=models.PROTECT,
-        verbose_name='Цвет',
-        related_name='tags',
+    color = ColorField(
+        'Цвет тега',
+        default='#FF0000',
+        unique=True,
+
     )
     slug = models.SlugField(
         'slug',
@@ -179,10 +166,16 @@ class Recipe(models.Model):
     text = models.TextField('Описание рецепта')
     cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления (мин.)',
-        validators=[MinValueValidator(
-            limit_value=1,
-            message='Время приготовления должно быть больше 0.'
-        )]
+        validators=(
+            MinValueValidator(
+                limit_value=1,
+                message='Время приготовления должно быть больше 0.',
+            ),
+            MaxValueValidator(
+                limit_value=360,
+                message='Время приготовления должно быть не более 360 мин.'
+            )
+        )
     )
     ingredients = models.ManyToManyField(
         IngredientUnit,
@@ -223,7 +216,7 @@ class Recipe(models.Model):
         ordering = ('-pub_date', 'name')
 
     def __str__(self):
-        return f'Рецепет "{self.name}"({self.author})'
+        return f'Рецепт "{self.name}"({self.author})'
 
     def save(self, *args, **kwargs):
         """
@@ -267,15 +260,27 @@ class RecipeIngredientAmount(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         'Количество',
-        validators=[MinValueValidator(
-            limit_value=1,
-            message='Количество должно быть больше 0.',
-        )]
+        validators=(
+            MinValueValidator(
+                limit_value=1,
+                message='Количество должно быть целым числом больше 0.',
+            ),
+            MaxValueValidator(
+                limit_value=2000,
+                message='Количество должно не более 2000.'
+            )
+        )
     )
 
     class Meta:
         verbose_name = 'Ингредиент, ед. измер., кол-во'
         verbose_name_plural = 'Ингредиенты, ед. измер., кол-во'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('recipe', 'ingredient_unit'),
+                name='unique_recipe_ingredient_unit',
+            )
+        ]
 
     def __str__(self):
         return f'{self.recipe}, {self.ingredient_unit}, {self.amount}'

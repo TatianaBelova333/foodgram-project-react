@@ -1,5 +1,5 @@
-from django_filters.rest_framework import FilterSet, BooleanFilter, CharFilter
 from django.db.models import Q
+from django_filters.rest_framework import CharFilter, BooleanFilter, FilterSet
 
 from recipes.models import Recipe
 
@@ -37,7 +37,7 @@ class RecipeFilter(FilterSet):
 
     class Meta:
         model = Recipe
-        fields = ['author']
+        fields = ('author',)
 
     def filter_by_tag_slug(self, queryset, field_name, value):
         """Filter and return a queryset of all Recipe instances

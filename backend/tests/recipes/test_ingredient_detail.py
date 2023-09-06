@@ -19,7 +19,7 @@ class IngredientDetailTestCase(APITestCase):
         self.unauthorised_user = APIClient()
 
         self.authorised_user = APIClient()
-        self.authorised_user.force_login(__class__.user)
+        self.authorised_user.force_authenticate(__class__.user)
 
     def test_ingredient_detail_unauthorised_correct(self):
         response = self.unauthorised_user.get(__class__.url)

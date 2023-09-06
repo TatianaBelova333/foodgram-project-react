@@ -38,7 +38,7 @@ class RecipesListTestCase(APITestCase):
         self.unauthorised_user = APIClient()
 
         self.authorised_user = APIClient()
-        self.authorised_user.force_login(__class__.user)
+        self.authorised_user.force_authenticate(__class__.user)
 
     def test_recipes_list_unauthorised_ok(self):
         response = self.unauthorised_user.get(__class__.url)
@@ -100,6 +100,7 @@ class RecipesListTestCase(APITestCase):
             all_recipes[:PAGE_LIMIT],
             many=True,
         ).data
+        print(response.data)
         self.assertEqual(
             response.status_code, HTTPStatus.OK
         )

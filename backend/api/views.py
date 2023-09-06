@@ -1,33 +1,41 @@
+from django.contrib.auth import get_user_model
+from django.db.models import Case, When
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Case, When
-from django.contrib.auth import get_user_model
 from djoser.conf import settings
-from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status, viewsets
 from djoser.views import UserViewSet as DjoserUserViewSet
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
+from rest_framework.response import Response
 
-from api.serializers import (IngredientUnitSerializer,
-                             TagSerializer,
-                             RecipeListDetailSerializer,
-                             RecipeCreateUpdateSerializer,
-                             RecipeBriefInfoSerializer)
-from api.filters import RecipeFilter, IngredientFilter
+from api.filters import IngredientFilter, RecipeFilter
 from api.permissions import IsObjOwnerOrAdminOrReadOnly
+from api.serializers import (IngredientUnitSerializer,
+                             RecipeBriefInfoSerializer,
+                             RecipeCreateUpdateSerializer,
+                             RecipeListDetailSerializer,
+                             TagSerializer)
+from recipes.models import IngredientUnit, Recipe, Tag
 from users.models import Subscription
-from recipes.models import IngredientUnit, Tag, Recipe
 
 User = get_user_model()
 
 
 class CustomUserViewSet(DjoserUserViewSet):
-    def get_permissions(self):
-        if self.action == 'me':
-            self.permission_classes = [IsAuthenticated]
-        return super().get_permissions()
+    """
+    Extends the Djoser UserViewSet.
 
+    Additional endpoints:
+
+    subscribe:
+    Add/remove the given user to/from the request user's subscriptions.
+
+    subscriptions:
+    Return a list of all exisiting request user's subscriptions.
+
+    """
     def get_serializer_class(self):
         if self.action in ('subscriptions', 'subscribe'):
             return settings.SERIALIZERS.subscriptions
@@ -38,12 +46,6 @@ class CustomUserViewSet(DjoserUserViewSet):
         if self.action == 'subscriptions':
             return user.subscriptions.all()
         return super().get_queryset()
-
-    @action(["get"], detail=False)
-    def me(self, request, *args, **kwargs):
-        self.get_object = self.get_instance
-        if request.method == "GET":
-            return self.retrieve(request, *args, **kwargs)
 
     @action(["post", "delete"],
             detail=True,
@@ -99,22 +101,66 @@ class CustomUserViewSet(DjoserUserViewSet):
 
 
 class IngredientReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
+    """
+    list:
+    Return a list of all ingredients with measurement units.
+
+    retrieve:
+    Return the given ingredient with the measurement unit.
+
+    """
     queryset = IngredientUnit.objects.all()
     serializer_class = IngredientUnitSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IngredientFilter
     pagination_class = None
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
 class TagReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
+    """
+    list:
+    Return a list of all existing recipe tags.
+
+    retrieve:
+    Return the given recipe tag.
+
+    """
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     pagination_class = None
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
 class RecipeViewset(viewsets.ModelViewSet):
+    """
+    list:
+    Return a list of all existing recipes filtered by pub_date
+    in descending order.
+
+    retrieve:
+    Return the given recipe.
+
+    create:
+    Create and return a new Recipe instance.
+
+    destroy:
+    Delete the given recipe.
+
+    partial_update:
+    Update the given recipe.
+
+    favorite:
+    Add/delete the given recipe to/from the request user's favorites.
+
+    shopping_cart:
+    Add/delete the given recipe to/from the request user's shopping_cart.
+
+    download_shopping_cart:
+    Download a text file with all ingredients
+    and their amounts from the shopping cart recipes.
+
+    """
 
     serializer_class = RecipeListDetailSerializer
     filter_backends = (DjangoFilterBackend,)
@@ -163,30 +209,38 @@ class RecipeViewset(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    def perform_update(self, serializer):
-        serializer.save(partial=True)
-
     @action(methods=['post', 'delete'],
             detail=True,
             permission_classes=[IsAuthenticated])
     def favorite(self, request, pk=None):
+        """Add/delete the given recipe to/from the request user's favorites."""
         recipe = self.get_object()
         user_items_name = 'favorites'
-        return self.handle_extra_action(request, recipe, user_items_name)
+        return self.__handle_extra_action(request, recipe, user_items_name)
 
     @action(methods=['post', 'delete'],
             detail=True,
             permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk=None):
+        """
+        Add/delete the given recipe to/from
+        the request user's shopping_cart.
+
+        """
         recipe = self.get_object()
         user_items_name = 'shopping_cart'
-        return self.handle_extra_action(request, recipe, user_items_name)
+        return self.__handle_extra_action(request, recipe, user_items_name)
 
     @action(methods=['get'],
             detail=False,
             permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request, pk=None):
-        shopping_cart_data = self.get_shopping_cart_ingredients(
+        """
+        Download a text file with ingredients and their amounts
+        from the shopping cart recipes.
+
+        """
+        shopping_cart_data = self.__get_shopping_cart_ingredients(
             self.request.user
         )
         readable_data = self.convert_to_readable_data(shopping_cart_data)
@@ -200,7 +254,7 @@ class RecipeViewset(viewsets.ModelViewSet):
         )
         return response
 
-    def handle_extra_action(self, request, recipe, user_items_name):
+    def __handle_extra_action(self, request, recipe, user_items_name):
         user = self.request.user
 
         user_items = {
@@ -210,16 +264,16 @@ class RecipeViewset(viewsets.ModelViewSet):
         user_items_set = user_items[user_items_name]
 
         if request.method == 'POST':
-            return self.add_to_user_items(
+            return self.__add_to_user_items(
                 user, recipe, user_items_set,
             )
         if request.method == 'DELETE':
-            return self.remove_from_user_items(
+            return self.__remove_from_user_items(
                 user, recipe, user_items_set
             )
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def add_to_user_items(self, user, recipe, user_items_set):
+    def __add_to_user_items(self, user, recipe, user_items_set):
         error_message = f'Рецепт "{recipe.name}" уже добавлен.'
 
         if recipe not in user_items_set.all():
@@ -236,7 +290,7 @@ class RecipeViewset(viewsets.ModelViewSet):
                             'errors': error_message,
                         })
 
-    def remove_from_user_items(self, user, recipe, user_items_set):
+    def __remove_from_user_items(self, user, recipe, user_items_set):
         error_message = f'Рецепт "{recipe.name}" уже удален.'
 
         if recipe in user_items_set.all():
@@ -249,7 +303,7 @@ class RecipeViewset(viewsets.ModelViewSet):
                             'errors': error_message,
                         })
 
-    def get_shopping_cart_ingredients(self, user: User) -> dict[str, int]:
+    def __get_shopping_cart_ingredients(self, user: User) -> dict[str, int]:
         """
         Return a dict with ingredients and their total amounts
         from the request user's shopping cart.
