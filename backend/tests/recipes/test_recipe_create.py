@@ -152,7 +152,9 @@ class RecipeCreateTestCase(APITestCase):
                 payload = data.copy()
                 del payload[missing_field]
 
-                request = self.factory.post(self.url, data=payload, format='json')
+                request = self.factory.post(
+                    self.url, data=payload, format='json'
+                )
                 request.user = __class__.user
                 force_authenticate(request, user=request.user)
 
