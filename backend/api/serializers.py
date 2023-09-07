@@ -216,15 +216,34 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ('id',)
 
-    # кажется, для тегов не нужна валидация - дубликатов не будет,
-    # так как здесь set,
-    # а отсутствие tags в initial data проверяется где-то выше
-    # и не доходит до метода validate_tags
+    #  вернула проверку наличия в базе ингредиентов,
+    #  т.к.сериализатор в этом не помог
     def validate_ingredients(self, ingredients):
+        """Validate that ingredients field is not empty, and
+        contains valid ingredient_unit ids."""
         if len(ingredients) == 0:
             raise serializers.ValidationError(
                 'Необходимо добавить хотя бы один ингредиент.'
             )
+
+        for ingredient in ingredients:
+            ingr_unit_id = ingredient['ingredient_unit']['id']
+            if not IngredientUnit.objects.filter(
+                pk=ingr_unit_id
+            ).exists():
+                raise serializers.ValidationError(
+                    f'Ингредиент с id '
+                    f'{ingr_unit_id} '
+                    f' не существует'
+                )
+        return ingredients
+
+    # пришлось убрать валидацию дубликатов игредиентов сюда,
+    # т.к. не показывает фронтенд ен показывает
+    # сообщение об ошибке пользовталю из validate_ingredients
+    def validate(self, data):
+        """Validate that ingredients are unique."""
+        ingredients = data['recipeingredientamount_set']
         ingr_count = Counter(
             ingr['ingredient_unit']['id'] for ingr in ingredients
         )
@@ -233,7 +252,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Некоторые ингредиенты дублируются.'
             )
-        return ingredients
+        return data
 
     def __add_ingredients(
             self,

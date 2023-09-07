@@ -74,7 +74,7 @@ class UserRegistrationTestCase(APITestCase):
                 code='unique'
             )],
             'email': [ErrorDetail(
-                string='Пользователь with this Почтовый ящик already exists.',
+                string='Пользователь с таким Почтовый ящик уже существует.',
                 code='unique')]
         }
         self.assertEqual(
@@ -113,8 +113,8 @@ class UserRegistrationTestCase(APITestCase):
                     data=payload,
                 )
                 print(response.data)
-                expected_response = {missing_field: [ErrorDetail(
-                    string='This field is required.', code='required'
-                )]}
                 self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
-                self.assertEqual(response.data, expected_response)
+                self.assertEqual(
+                    response.data[missing_field][0].code,
+                    'required'
+                )

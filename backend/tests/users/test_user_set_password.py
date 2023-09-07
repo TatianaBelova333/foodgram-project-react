@@ -74,11 +74,10 @@ class UserSetPasswordTestCase(APITestCase):
                     __class__.url,
                     data=payload,
                 )
-                print(response.data)
-                expected_response = {missing_field: [ErrorDetail(
-                    string='This field is required.', code='required'
-                )]}
-                self.assertEqual(response.data, expected_response)
+                self.assertEqual(
+                    response.data[missing_field][0].code,
+                    'required',
+                )
 
     def test_user_set_password_wrong_current_password(self):
         current_password = 'OLD_Dyskig-fubnas-dozby1'
@@ -92,14 +91,12 @@ class UserSetPasswordTestCase(APITestCase):
             __class__.url,
             data=payload,
         )
-        expected_response = {'current_password': [ErrorDetail(
-            string='Invalid password.', code='invalid_password'
-        )]}
         self.assertEqual(
             response.status_code, HTTPStatus.BAD_REQUEST
         )
         self.assertEqual(
-            response.data, expected_response
+            response.data['current_password'][0].code,
+            'invalid_password',
         )
 
     def test_user_set_password_to_same_password_400(self):
