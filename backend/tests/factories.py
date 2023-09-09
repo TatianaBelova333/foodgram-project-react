@@ -1,4 +1,5 @@
 import factory
+import factory.fuzzy
 from django.contrib.auth import get_user_model
 
 from recipes.models import (Tag, IngredientUnit,
@@ -14,7 +15,9 @@ class TagFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Tag
 
-    name = factory.Sequence(lambda n: f'breakfast{n}')
+    name = factory.fuzzy.FuzzyText(
+        chars='абвгдежзийклмнопрстуфхцчшщъыьэюя'
+    )
     color = factory.Iterator([
         '#A4FF26',
         '#48FF9D',

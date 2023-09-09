@@ -80,6 +80,7 @@ class RecipeCreateTestCase(APITestCase):
         )
 
     def test_recipe_create_authorised_ok(self):
+        print(self.tag)
         start_time = timezone.now()
         data = {
             "ingredients": [

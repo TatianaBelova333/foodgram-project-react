@@ -1,7 +1,11 @@
 from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import (
+    MaxValueValidator,
+    MinValueValidator,
+    RegexValidator,
+)
 from django.db import models
 from pytils.translit import slugify
 
@@ -15,7 +19,6 @@ class NameBaseModel(models.Model):
         'lowercase': str.lower,
     }
     STR_LIMIT = 50
-
     default_lettercase = 'capitalize'
     is_cleaned = False
 
@@ -39,6 +42,7 @@ class NameBaseModel(models.Model):
 
         """
         self.is_cleaned = True
+
         self.name = self.LETTER_CASES[self.default_lettercase](self.name)
 
         instance_exists = self.__class__.objects.filter(pk=self.pk).first()
@@ -120,6 +124,20 @@ class IngredientUnit(models.Model):
 
 class Tag(NameBaseModel):
     """Model for recipes tags."""
+    name = models.CharField(
+        'Название',
+        max_length=200,
+        unique=True,
+        db_index=True,
+        validators=[
+            RegexValidator(
+                regex=r'^[А-Яа-я]+$',
+                message='Название тега может состоять только из одного слова, '
+                        'содержащего кириллицу.',
+                code='invalid name'
+            )
+        ]
+    )
     color = ColorField(
         'Цвет тега',
         default='#FF0000',
@@ -137,6 +155,22 @@ class Tag(NameBaseModel):
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
+    def clean(self):
+        """
+        Validate that the color HEX-code is unique (case-insensitive).
+
+        """
+        super().clean()
+        self.color = self.color.upper()
+        instance_exists = self.__class__.objects.filter(pk=self.pk).first()
+        if not instance_exists or instance_exists.color != self.color:
+            if self.__class__.objects.filter(
+                color=self.color,
+            ).exists():
+                raise ValidationError(
+                    {'color': 'Данный HEX-код уже занят.'}
+                )
+
     def save(self, *args, **kwargs):
         """
         Create slug from the color field value
@@ -146,7 +180,7 @@ class Tag(NameBaseModel):
         """
         if not self.slug:
             max_length = self.__class__._meta.get_field('slug').max_length
-            self.slug = slugify(self.title)[:max_length]
+            self.slug = slugify(self.name)[:max_length]
         super().save(*args, **kwargs)
 
 
@@ -214,6 +248,12 @@ class Recipe(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         ordering = ('-pub_date', 'name')
+        constraints = [
+            models.UniqueConstraint(
+                fields=('author', 'name'),
+                name='unique_author_recipe_name',
+            )
+        ]
 
     def __str__(self):
         return f'Рецепт "{self.name}"({self.author})'

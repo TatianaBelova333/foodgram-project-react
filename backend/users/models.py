@@ -16,13 +16,15 @@ class User(AbstractUser):
         'Юзернейм',
         max_length=150,
         unique=True,
-        help_text='Required. 150 characters or fewer. Letters, digits and '
-        '@/./+/-/_ only.',
+        help_text='Обязательное поле. Не более 150 символов. Буквы, цифры и '
+        '@/./+/-/_.',
         validators=[
-            RegexValidator(r'^[\w.@+-]+$',
-                           'Enter a valid username. '
-                           'This value may contain only letters, numbers '
-                           'and @/./+/-/_ characters.'),
+            RegexValidator(
+                regex=r'^[\w.@+-]+$',
+                message='Имя пользователя должно содержать только буквы, '
+                        'цифры и следующие символы: @/./+/-/_.',
+                code='invalid_username'
+            )
         ],
         error_messages={
             'unique': "Данный логин уже занят другим пользователем.",

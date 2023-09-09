@@ -37,8 +37,10 @@ class Command(BaseCommand):
                 try:
                     model_instance = model(**row)
                     model_instance.save()
-                except Exception as er:
-                    self.stdout.write(f'{row} - {er}', ending='\n\n')
+                except Exception:
+                    self.stdout.write(
+                        f'{row} - Ошибка добавления', ending='\n\n'
+                    )
             self.stdout.write(f'{model} loading  is complete', ending='\n\n')
 
     def handle(self, *args, **options):

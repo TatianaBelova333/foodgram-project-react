@@ -37,10 +37,21 @@ class IngredientMeasurementUnitAdmin(admin.ModelAdmin):
 class RecipeIngredientAmountInLine(admin.TabularInline):
     model = RecipeIngredientAmount
     raw_id_fields = ('ingredient_unit',)
+    min_num = 1
+
+    def get_formset(self, request, obj=None, **kwargs):
+        """
+        Validate that deletion of all ingredients in the existing recipe
+        is not allowed.
+        The recipe being updated must contain at least one ingredient.
+
+        """
+        formset = super().get_formset(request, obj=None, **kwargs)
+        formset.validate_min = True
+        return formset
 
 
 class RecipeAdmin(admin.ModelAdmin):
-
     list_display = (
         'pk',
         'name',
@@ -50,7 +61,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'display_favorites_adds_number',
     )
     search_fields = ('name',)
-    list_filter = ('author', 'name')
+    list_filter = ('author', 'name', 'tags')
     inlines = (RecipeIngredientAmountInLine,)
 
 

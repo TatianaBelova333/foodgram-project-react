@@ -81,7 +81,7 @@ class TagDetailTestCase(APITestCase):
         data = {
             'color': 'FF5733',
             'slug': 'brunch',
-            'name': 'brunch'
+            'name': 'бранч'
         }
         response = self.authorised_user.patch(
             url,

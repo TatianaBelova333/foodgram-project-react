@@ -215,6 +215,13 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
             'author',
         ]
         read_only_fields = ('id',)
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=Recipe.objects.all(),
+                fields=('author', 'name'),
+                message='Вы уже создавали рецепт с таким названием.'
+            )
+        ]
 
     #  вернула проверку наличия в базе ингредиентов,
     #  т.к.сериализатор в этом не помог
@@ -239,8 +246,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         return ingredients
 
     # пришлось убрать валидацию дубликатов игредиентов сюда,
-    # т.к. не показывает фронтенд ен показывает
-    # сообщение об ошибке пользовталю из validate_ingredients
+    # т.к. фронтенд показывает пользователю только non-field errors
     def validate(self, data):
         """Validate that ingredients are unique."""
         ingredients = data['recipeingredientamount_set']
@@ -280,7 +286,10 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
                 recipe.tags.add(*tags)
                 recipe.save()
         except DatabaseError:
-            raise serializers.ValidationError('Не удалось создать рецепт.')
+            raise serializers.ValidationError(
+                'Не удалось создать рецепт. '
+                'Возможно, Вы уже создавали рецепт с таким навзанием.'
+            )
 
         return recipe
 
@@ -297,7 +306,8 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
                 recipe.save()
         except DatabaseError:
             raise serializers.ValidationError(
-                f'Не удалось отредактировать рецепт - {recipe.name}.'
+                f'Не удалось отредактировать рецепт - {recipe.name}. '
+                f'Возможно, у Вас уже есть рецепт с таким названием.'
             )
 
         return super().update(recipe, validated_data)
