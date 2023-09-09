@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.db.models import Case, When
+from django.db.models import Case, QuerySet, Sum, When
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.conf import settings
@@ -307,34 +307,34 @@ class RecipeViewset(viewsets.ModelViewSet):
                             'errors': error_message,
                         })
 
-    def __get_shopping_cart_ingredients(self, user: User) -> dict[str, int]:
+    def __get_shopping_cart_ingredients(
+            self, user: User
+    ) -> QuerySet[str, str, int]:
         """
         Return a dict with ingredients and their total amounts
         from the request user's shopping cart.
 
         """
-        recipes_in_cart = user.shopping_cart.all()
-        #  Collect ingredients from all recipes in user's shopping cart
-        ingr_with_qty = []
-        for recipe in recipes_in_cart:
-            ingr_with_qty.extend(
-                recipe.recipeingredientamount_set.all()
-            )
-        #  Sum up the amounts of the duplicate inredients
-        ingr_with_tot_qty = {}
-        for ingr in ingr_with_qty:
-            ingr_with_tot_qty[ingr.ingredient_unit] = (ingr_with_tot_qty.get(
-                ingr.ingredient_unit, 0) + ingr.amount)
-
-        return ingr_with_tot_qty
+        recipes_in_cart = user.shopping_cart
+        ingredients_total_amount = recipes_in_cart.values(
+            'recipeingredientamount__ingredient_unit'
+        ).annotate(
+            total_amount=Sum('recipeingredientamount__amount')
+        ).values_list(
+            'recipeingredientamount__ingredient_unit__ingredient__name',
+            'recipeingredientamount__ingredient_unit__measurement_unit__name',
+            'total_amount',
+        )
+        print(ingredients_total_amount)
+        return ingredients_total_amount
 
     @staticmethod
     def convert_to_readable_data(
-        ingredients_with_qty: dict[str, int]
+        ingredients_total_amount: QuerySet[str, str, int]
     ) -> list[str]:
-        """Convert data into a list of strings."""
+        """Convert QuerySet data into a list of strings."""
         readable_data = []
-        for ingredient in ingredients_with_qty.items():
-            ingredient_unit, amount = ingredient
-            readable_data.append(f'{ingredient_unit}: {amount}\n')
+        for item in ingredients_total_amount:
+            ingredient_name, unit, amount = item
+            readable_data.append(f'{ingredient_name}({unit}): {amount}\n')
         return sorted(readable_data)
