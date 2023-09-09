@@ -1,3 +1,6 @@
+![example workflow]
+(https://github.com/TatianaBelova333/foodgram-project-react/actions/workflows/main.yml/badge.svg)
+
 # Foodgram Recipe Website
 Available at https://foodgram-belova.ddns.net. \
 
@@ -33,21 +36,21 @@ Authorised users may subscribe to other users, add and update their own recipes,
 ### Installation
 - Clone the repository
 ```
-git clone [https://github.com/TatianaBelova333/kittygram_final.git](https://github.com/TatianaBelova333/foodgram-project-react.git)
+git clone https://github.com/TatianaBelova333/foodgram-project-react.git
 ```
 - Create .env file in the project root directory as in the .env.example. Note that ALLOWED_HOSTS values in the .env file must be separated by a semicolon.
 
 - Navigate from the project root directory to infra folder:
-```
-cd infra
-```
+  ```
+  cd infra
+  ```
 
 - Build and run your app with docker compose from the project directory
-```
+  ```
   docker compose up --build
   docker compose exec backend python manage.py migrate
   docker compose exec backend cp -r /app/collected_static/. /backend_static/
-```
+  ```
 - To prepopulate database with initial data for testing, run the following command:
   ```
   docker compose exec backend python3 manage.py loaddata user ingredient measurementunit ingredientunit tag recipe recipeingredientamount
@@ -59,9 +62,9 @@ cd infra
 
 - To see the API documentation, go to http://localhost/api/docs/ .
 - To run tests, run the following command:
-```
+  ```
   docker compose exec backend pytest
-```
+  ```
 
 # Authors
 [Tatiana Belova](https://github.com/TatianaBelova333)

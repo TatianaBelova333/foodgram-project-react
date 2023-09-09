@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 validators=[
                     django.core.validators.RegexValidator(
                         code='invalid name',
-                        message='Название тега может состоять только из одного слова, содержащего буквы кириллицы.',
+                        message='Название тега может состоять только из одного слова, содержащего кириллицу.',
                         regex='^[А-Яа-я]+$',
                     )
                 ],

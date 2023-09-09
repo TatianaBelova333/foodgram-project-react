@@ -134,7 +134,7 @@ class Tag(NameBaseModel):
                 regex=r'^[А-Яа-я]+$',
                 message='Название тега может состоять только из одного слова, '
                         'содержащего кириллицу.',
-                code='invalid name'
+                code='invalid_name'
             )
         ]
     )
