@@ -325,7 +325,6 @@ class RecipeViewset(viewsets.ModelViewSet):
             'recipeingredientamount__ingredient_unit__measurement_unit__name',
             'total_amount',
         )
-        print(ingredients_total_amount)
         return ingredients_total_amount
 
     @staticmethod
