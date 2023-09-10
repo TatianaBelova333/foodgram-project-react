@@ -3,11 +3,6 @@
 # Foodgram Recipe Website
 Available at https://foodgram-belova.ddns.net. \
 
-Admin panel at https://foodgram-belova.ddns.net/admin/ \
-Для ревью (superuser):
-* email: Tanja5676@mail.ru
-* password: 1111
-
 ### Description
 Website for posting and viewing recipes.
 Unauthorised users are permitted to see all recipes and recipe authors' pages.
