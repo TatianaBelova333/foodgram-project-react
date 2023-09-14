@@ -132,6 +132,6 @@ dmypy.json
 .idea
 
 *.bak
-.DS_Store
+**/.DS_Store
 
 nginx1.conf.bak
