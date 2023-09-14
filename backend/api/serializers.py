@@ -223,8 +223,6 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
             )
         ]
 
-    #  вернула проверку наличия в базе ингредиентов,
-    #  т.к.сериализатор в этом не помог
     def validate_ingredients(self, ingredients):
         """Validate that ingredients field is not empty, and
         contains valid ingredient_unit ids."""
@@ -245,8 +243,8 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
                 )
         return ingredients
 
-    # пришлось убрать валидацию дубликатов игредиентов сюда,
-    # т.к. фронтенд показывает пользователю только non-field errors
+    #  ingredient duplicate validation is here (not in validate_ingredients)
+    #  due to frontend issues (it shows non-field errors to the user)
     def validate(self, data):
         """Validate that ingredients are unique."""
         ingredients = data['recipeingredientamount_set']

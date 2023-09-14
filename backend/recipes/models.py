@@ -19,7 +19,8 @@ class NameBaseModel(models.Model):
         'lowercase': str.lower,
     }
     STR_LIMIT = 50
-    default_lettercase = 'capitalize'
+    DEFAULT_LETTERCASE = 'capitalize'
+
     is_cleaned = False
 
     name = models.CharField(
@@ -43,7 +44,7 @@ class NameBaseModel(models.Model):
         """
         self.is_cleaned = True
 
-        self.name = self.LETTER_CASES[self.default_lettercase](self.name)
+        self.name = self.LETTER_CASES[self.DEFAULT_LETTERCASE](self.name)
 
         instance_exists = self.__class__.objects.filter(pk=self.pk).first()
 
@@ -68,7 +69,7 @@ class NameBaseModel(models.Model):
 
 class MeasurementUnit(NameBaseModel):
     """Model for units of measurement for ingredients."""
-    default_lettercase = 'lowercase'
+    DEFAULT_LETTERCASE = 'lowercase'
 
     class Meta(NameBaseModel.Meta):
         verbose_name = 'Единица измерения'

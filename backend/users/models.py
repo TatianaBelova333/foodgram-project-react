@@ -53,9 +53,6 @@ class User(AbstractUser):
     def is_user(self):
         return self.role == UserRoles.USER
 
-    #  по ТЗ у пользователя только две роли, а если убрать это property,
-    #  то админ не может зайти в админку, или я не знаю,
-    # как сделать по-другому...
     @property
     def is_staff(self):
         return self.is_admin
