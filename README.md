@@ -1,7 +1,6 @@
 ![Main Foodgram workflow](https://github.com/TatianaBelova333/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 
 # Foodgram Recipe Website
-Available at https://foodgram-belova.ddns.net.
 
 ### Description
 Website for posting and viewing recipes.
