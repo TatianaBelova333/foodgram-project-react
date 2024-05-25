@@ -1,5 +1,3 @@
-![Main Foodgram workflow](https://github.com/TatianaBelova333/foodgram-project-react/actions/workflows/main.yml/badge.svg)
-
 # Foodgram Recipe Website
 
 ### Description
@@ -29,7 +27,7 @@ Authorised users may subscribe to other users, add and update their own recipes,
 ### Installation
 - Clone the repository
   ```
-  git clone https://github.com/TatianaBelova333/foodgram-project-react.git
+  https://github.com/TatianaBelova333/recipe_app.git
   ```
 - Create .env file in the project root directory as in the .env.example. Note that ALLOWED_HOSTS values in the .env file must be separated by a semicolon.
 
